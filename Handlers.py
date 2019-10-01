@@ -18,26 +18,13 @@ Video_Idle_Path = Main_path + 'Icon_Image/video_idle.png'
 Video_Recording_Path = Main_path + 'Icon_Image/video_recording.png'
 Stop_Idle_Path = Main_path + 'Icon_Image/stop_idle.png'
 Stop_Greyed_Path = Main_path + 'Icon_Image/stop_grey.png'
-TimeLapse_Idle_Path = Main_path + 'Icon_Image/timelapse_idle1.png'
-TimeLapse_InUse_Path = Main_path + 'Icon_Image/timelapse_inuse.png'
-Main_Tab_Path = Main_path + 'Icon_Image/mainTab.png'
-Settings_Tab_Path = Main_path + 'Icon_Image/settingsTab.png'
-ServoController_Tab_Path = Main_path + 'Icon_Image/controllerTab.png'
-Left_Button_Path = Main_path + 'Icon_Image/leftButton.png'
-Right_Button_Path = Main_path + 'Icon_Image/rightButton.png'
-Up_Button_Path = Main_path + 'Icon_Image/upButton.png'
-Down_Button_Path = Main_path + 'Icon_Image/downButton.png'
-Left_Button_Pressed_Path = Main_path + 'Icon_Image/leftButton_Pressed.png'
-Right_Button_Pressed_Path = Main_path + 'Icon_Image/rightButton_Pressed.png'
-Up_Button_Pressed_Path = Main_path + 'Icon_Image/upButton_Pressed.png'
-Down_Button_Pressed_Path = Main_path + 'Icon_Image/downButton_Pressed.png'
-Freelook_Path = Main_path + 'Icon_Image/freelook1.png'
 
-# --------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------
 # ------------------------------------ Button Reset Handler Class ----------------------------------------------
 # --------------------------------------------------------------------------------------------------------------
 class Button_Reset_Handler(QObject):
-        def __init__(self, captureThre, recordThre capture, record, vidSteam, statusBar):
+        def __init__(self, captureThre, recordThre, capture, record, vidSteam, statusBar):
                 super(Button_Reset_Handler, self).__init__()
                 self.captureThread = captureThre
                 self.recordThread = recordThre

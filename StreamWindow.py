@@ -12,13 +12,12 @@ import numpy as np
 # --------------------------------------------------------------------------------------------------------------   
 class Stream_Video(QLabel):             
         
-    def __init__(self, window, video_stream, Record_Thread, Capture_Thread, TimeLapse_Thread):
+    def __init__(self, window, video_stream, Record_Thread, Capture_Thread):
         super(Stream_Video, self).__init__()
         self.setParent(window)
         self.RPI_GUIStream = video_stream
         self.recordThread = Record_Thread
         self.captureThread = Capture_Thread
-        self.timelapseThread = TimeLapse_Thread
         
         # Connecting thread (emits) to functions
         self.RPI_GUIStream.Video_Stream_signal.connect(self.StreamToGUI)

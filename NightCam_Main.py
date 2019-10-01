@@ -16,12 +16,10 @@ from Handlers import Button_Reset_Handler, Error_Handler
 from StreamWindow import Stream_Video
 from RPI_StreamThread import QRPIVideoStreamThread
 from Sleeper_Thread import QTimeThread
-from web_stream import WebStream_Thread
 from GUI_Stylesheets import GUI_Stylesheets
 
 # Current version of application - Update for new builds
 appVersion = "0.1"      # Update version
-
 
 # Icon Image locations
 Main_path = os.getcwd() + "/"     
@@ -43,9 +41,6 @@ if not os.path.exists(Image_Path):
     
 if not os.path.exists(Video_Path):
     os.makedirs(Video_Path)
-    
-if not os.path.exists(TimeLapse_Path):
-    os.makedirs(TimeLapse_Path)
         
 # Instantiate style sheets for GUI Objects
 GUI_Style = GUI_Stylesheets()
@@ -83,7 +78,6 @@ class Window(QMainWindow):
         # -------------------------------------------------------------- 
         self.RPICaptureThread.start()
         self.RPIRecordThread.start()
-        self.RPITimeLapseThread.start()
         self.Video_Stream.start()
         self.Timer_Thread.start()
     
@@ -124,8 +118,9 @@ class Window(QMainWindow):
         # Instantiate button reset handler and error handler
         self.allHandlers()
         
+        self.Video_Stream.Set_Video_Stream_Ready(True)
         # Display GUI Objects
-        # self.show()
+        #~ self.show()
         #~ self.showFullScreen()
         self.showMaximized()
           
@@ -177,7 +172,7 @@ class Window(QMainWindow):
     # ------------------------------------------------------------------
     # Creating button for snapshots
     def Snapshot_Btn_GUI(self):
-        self.snpsht_btn = Snapshot_Button(self, "" self.RPICaptureThread, self.Video_Stream, self.Timer_Thread, self.RPIRecordThread)
+        self.snpsht_btn = Snapshot_Button(self, "", self.RPICaptureThread, self.Video_Stream, self.Timer_Thread, self.RPIRecordThread)
         self.snpsht_btn.setStyleSheet(GUI_Style.startButton)
         self.snpsht_btn.pressed.connect(self.snpsht_btn.On_Click)
         self.snpsht_btn.released.connect(self.snpsht_btn.Un_Click)
@@ -207,8 +202,8 @@ class Window(QMainWindow):
     # ------------------------------------------------------------------
     # Instantiate button handler object class
     def allHandlers(self):
-        self.buttonHandler = Button_Reset_Handler(self.RPICaptureThread, self.RPIRecordThread, self.snpsht_btn, self.rec_btn, self.Video_Stream, 
-                                                         self.statusBar)
+        #self.buttonHandler = Button_Reset_Handler(self.RPICaptureThread, self.RPIRecordThread, self.snpsht_btn, self.rec_btn, self.Video_Stream, 
+                                                         #self.statusBar)
         self.errorHandler = Error_Handler(self.RPICaptureThread, self.RPIRecordThread, self.Video_Stream, self.statusBar)
    
 
