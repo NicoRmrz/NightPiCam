@@ -53,7 +53,7 @@ class Window(QMainWindow):
     # Initialization of the GUI
     def __init__(self):
         super(Window, self).__init__()
-        self.setGeometry(50,50,800,480)
+        #self.setGeometry(50,50,800,480)
         self.setWindowTitle("Night Cam v" + appVersion)
         self.setStyleSheet(GUI_Style.NM_mainWindow)
         self.setWindowIcon(QIcon(Icon_Path))
@@ -87,11 +87,13 @@ class Window(QMainWindow):
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
         
+        self.axisLabels()
         # --------------------------------------------------------------
         # -------------- Create Bottom Status Bar-----------------------
         # -------------------------------------------------------------- 
-        self.StatusBar()
-        self.setStatusBar(self.statusBar)
+        # ~ self.StatusBar()
+        
+        # ~ self.setStatusBar(self.statusBar)
         
         # --------------------------------------------------------------
         # ------------- Create Main Window Layout ----------------------
@@ -103,7 +105,7 @@ class Window(QMainWindow):
         self.VideoStream()
           
         Main_Window_HLayout.addWidget(self.Vid_Stream)       
-        Main_Window_HLayout.setContentsMargins(20, 20, 20, 20)    
+        Main_Window_HLayout.setContentsMargins(0, 0, 0, 0)    
     
         # --------------------------------------------------------------
         # ------------ Add Final Layout to Main Window -----------------
@@ -120,8 +122,8 @@ class Window(QMainWindow):
         
         self.Video_Stream.Set_Video_Stream_Ready(True)
         # Display GUI Objects
-        #~ self.show()
-        #~ self.showFullScreen()
+        # ~ self.show()
+        # ~ self.showFullScreen()
         self.showMaximized()
           
 # --------------------------------------------------------------------------------------------------------------
@@ -130,42 +132,34 @@ class Window(QMainWindow):
     # Create Window to stream live feed
     def VideoStream(self):
         self.Vid_Stream = Stream_Video(self, self.Video_Stream, self.RPIRecordThread, self.RPICaptureThread)
-        self.Vid_Stream.setMinimumSize(800, 480)
+        # ~ self.Vid_Stream.setMinimumSize(800, 480)
         self.Vid_Stream.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.Vid_Stream.setBackgroundRole(QPalette.Base)
-        self.Vid_Stream.setScaledContents(True)
+        # ~ self.Vid_Stream.setScaledContents(True)
         self.Vid_Stream.setStyleSheet(GUI_Style.videoStream)
+    # ------------------------------------------------------------------
+    # ---------------- Accelerometer Axis Function ---------------------
+    # ------------------------------------------------------------------
+    def axisLabels(self):
+        self.xAxis = QLabel("x-axis", self)
+        self.xAxis.move(740,380)
+        self.xAxis.setMinimumSize(30, 20)
+        self.xAxis.setStyleSheet(GUI_Style.statusBar_XY)
+        # ~ self.xAxis.setAlignment(Qt.AlignCenter)
+        
+        self.yAxis = QLabel("y-axis", self)
+        self.yAxis.move(740,400)
+        self.yAxis.setMinimumSize(30, 20)
+        self.yAxis.setStyleSheet(GUI_Style.statusBar_XY)
+        # ~ self.yAxis.setAlignment(Qt.AlignCenter)
+        
+        self.zAxis = QLabel("z-axis", self)
+        self.zAxis.move(740,420)
+        self.zAxis.setMinimumSize(30, 20)        
+        self.zAxis.setStyleSheet(GUI_Style.statusBar_XY)
+        # ~ self.zAxis.setAlignment(Qt.AlignCenter)
 
-    # ------------------------------------------------------------------
-    # ---------------- Create Status Bar Function ----------------------
-    # ------------------------------------------------------------------
-    def StatusBar(self):
-        self.statusBar = QStatusBar()
-        self.statusBar.setStyleSheet(GUI_Style.statusBarWhite)
-        
-        # self.xHorizontal = QLabel()
-        # self.xHorizontal.setMinimumSize(50, 12)
-        # self.xHorizontal.setStyleSheet(GUI_Style.statusBar_XY)
-        # self.xHorizontal.setText("| X: 90")
-        # self.xHorizontal.setAlignment(Qt.AlignCenter)
-        
-        # self.yVertical = QLabel()
-        # self.yVertical.setMinimumSize(50, 12)
-        # self.yVertical.setStyleSheet(GUI_Style.statusBar_XY)
-        # self.yVertical.setText("| Y: 90")
-        # self.yVertical.setAlignment(Qt.AlignCenter)
-        
-        # self.res = QLabel()
-        # self.res.setMinimumSize(50, 15)
-        # self.res.setStyleSheet(GUI_Style.statusBar_widgets)
-        # self.res.setText("| res 1280x720")
-        # self.res.setAlignment(Qt.AlignCenter)
-        
-        # self.statusBar.addPermanentWidget(self.xHorizontal, 0)
-        # self.statusBar.addPermanentWidget(self.yVertical, 0)
-        # self.statusBar.addPermanentWidget(self.res, 0)
-        
-        self.statusBar.showMessage("Starting Up... ", 4000)
+
         
     # ------------------------------------------------------------------
     # ------------ Home Tab GUI Objects Functions ----------------------

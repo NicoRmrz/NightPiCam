@@ -37,7 +37,7 @@ class Accelerometer:
             self.spi.open(spiPort,spiCS)
             self.spi.max_speed_hz = 4000000
         else:  #i2C
-            self.bus = smbus.SMBus(1)
+            self.bus = smbus.SMBus(3)
             self.addr = i2cAddress
 
     def single_access_read(self, reg=0x00):

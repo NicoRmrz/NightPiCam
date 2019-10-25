@@ -13,6 +13,8 @@ class Setup_PiCam(object):
         def PiCam_Configuration(self):
                 self.camera = PiCamera()  
                 self.camera.rotation = 180
+                self.camera.annotate_text_size = 15
+
                 self.rawCapture = PiRGBArray(self.camera)
 
                 # allow the camera to warmup
