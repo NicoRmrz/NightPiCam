@@ -1,0 +1,9 @@
+  
+[Desktop Entry]
+Name=Night Camera
+Comment=My application which does this
+Icon=/home/pi/NightCam/Icon_Image/freelook.png
+Exec=bash /home/pi/NightCam/openApp.sh
+Type=Application
+Encoding=UTF-8
+Categories=None;
