@@ -17,6 +17,7 @@ from StreamWindow import Stream_Video
 from RPI_StreamThread import QRPIVideoStreamThread
 from Sleeper_Thread import QTimeThread
 from GUI_Stylesheets import GUI_Stylesheets
+from LIS3DThread import AcellerometerThread
 
 # Current version of application - Update for new builds
 appVersion = "0.1"      # Update version
@@ -72,6 +73,7 @@ class Window(QMainWindow):
         self.RPIRecordThread = QRPIRecordVideoThread(self.camera)
         self.Video_Stream = QRPIVideoStreamThread(self.camera, self.rawCapture)
         self.Timer_Thread = QTimeThread()
+        self.accelerometerThread = AcellerometerThread()
 
         # --------------------------------------------------------------
         # ---------------- Start All Threads ---------------------------
@@ -80,21 +82,20 @@ class Window(QMainWindow):
         self.RPIRecordThread.start()
         self.Video_Stream.start()
         self.Timer_Thread.start()
+        self.accelerometerThread.start()
+
     
         # --------------------------------------------------------------
         # ---------------- Create Main Widget --------------------------
         # -------------------------------------------------------------- 
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
-        
-        self.axisLabels()
+ 
         # --------------------------------------------------------------
-        # -------------- Create Bottom Status Bar-----------------------
-        # -------------------------------------------------------------- 
-        # ~ self.StatusBar()
-        
-        # ~ self.setStatusBar(self.statusBar)
-        
+        # -------------- Create Object over Vid Stream -----------------
+        # --------------------------------------------------------------        
+        self.axisLabels()
+
         # --------------------------------------------------------------
         # ------------- Create Main Window Layout ----------------------
         # --------------------------------------------------------------
@@ -121,6 +122,11 @@ class Window(QMainWindow):
         self.allHandlers()
         
         self.Video_Stream.Set_Video_Stream_Ready(True)
+        
+        # --------------------------------------------------------------
+        # ------------------ Connect Signals ---------------------------
+        # -------------------------------------------------------------- 
+        self.accelerometerThread.axisSignals.connect(self.AxisUpdate)
         # Display GUI Objects
         # ~ self.show()
         # ~ self.showFullScreen()
@@ -145,22 +151,22 @@ class Window(QMainWindow):
         self.xAxis.move(740,380)
         self.xAxis.setMinimumSize(30, 20)
         self.xAxis.setStyleSheet(GUI_Style.statusBar_XY)
-        # ~ self.xAxis.setAlignment(Qt.AlignCenter)
         
         self.yAxis = QLabel("y-axis", self)
         self.yAxis.move(740,400)
         self.yAxis.setMinimumSize(30, 20)
         self.yAxis.setStyleSheet(GUI_Style.statusBar_XY)
-        # ~ self.yAxis.setAlignment(Qt.AlignCenter)
         
         self.zAxis = QLabel("z-axis", self)
         self.zAxis.move(740,420)
         self.zAxis.setMinimumSize(30, 20)        
         self.zAxis.setStyleSheet(GUI_Style.statusBar_XY)
-        # ~ self.zAxis.setAlignment(Qt.AlignCenter)
 
+    def AxisUpdate(self, x, y , z):
+        self.xAxis.setText("X: " + str(x))
+        self.yAxis.setText("Y: " + str(y))
+        self.zAxis.setText("Z: " + str(z))
 
-        
     # ------------------------------------------------------------------
     # ------------ Home Tab GUI Objects Functions ----------------------
     # ------------------------------------------------------------------
