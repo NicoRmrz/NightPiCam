@@ -95,6 +95,7 @@ class Window(QMainWindow):
         # -------------- Create Object over Vid Stream -----------------
         # --------------------------------------------------------------        
         self.axisLabels()
+        self.Snapshot_Btn_GUI()
 
         # --------------------------------------------------------------
         # ------------- Create Main Window Layout ----------------------
@@ -174,10 +175,12 @@ class Window(QMainWindow):
     def Snapshot_Btn_GUI(self):
         self.snpsht_btn = Snapshot_Button(self, "", self.RPICaptureThread, self.Video_Stream, self.Timer_Thread, self.RPIRecordThread)
         self.snpsht_btn.setStyleSheet(GUI_Style.startButton)
+        self.snpsht_btn.move(140,380)
+        self.snpsht_btn.setMaximumSize(65,55)
         self.snpsht_btn.pressed.connect(self.snpsht_btn.On_Click)
         self.snpsht_btn.released.connect(self.snpsht_btn.Un_Click)
         self.snpsht_btn.setIcon(QIcon(Camera_Idle_Path))
-        self.snpsht_btn.setIconSize(QSize(65, 70))
+        self.snpsht_btn.setIconSize(QSize(60, 60))
 
     # Creating button for recording video
     def Record_Btn_GUI(self):

@@ -15,7 +15,7 @@ RECORD_TIME = 100        # 100 seconds
 
 # Icon Image locations
 Main_path = os.getcwd() + "/"     
-Icon_Path = Main_path + 'Icon_Image/pup.jpg'
+# ~ Icon_Path = Main_path + 'Icon_Image/pup.jpg'
 Camera_Idle_Path = Main_path + 'Icon_Image/cam_idle.png'
 Camera_Capture_Path = Main_path + 'Icon_Image/cam_capture.png'
 Video_Idle_Path = Main_path + 'Icon_Image/video_idle.png'

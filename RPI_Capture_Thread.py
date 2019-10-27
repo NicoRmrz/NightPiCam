@@ -88,7 +88,7 @@ class QRPICaptureThread(QThread):
 
 								# Save image with timestamp
 								currentTime = time.strftime('%Y-%m-%d__%H_%M_%S')
-								Saved_Snap_Name = Image_Path + "Pup_Snap_" + currentTime + ".jpg"
+								Saved_Snap_Name = Image_Path + "Snapshot_" + currentTime + ".jpg"
 								self.camera.capture(Saved_Snap_Name, splitter_port = 0)
 
 								# emit image to GUI QLabel
@@ -105,8 +105,10 @@ class QRPICaptureThread(QThread):
 												#Exit loop
 												self.Stop_Rec = False
 															
-							except PiCameraValueError:
+							except PiCameraValueError as e:
 								self.SendError("Something went wrong with the camera.. Try Again!")
+								self.camera.annotate_text = (str(e))
+								self.camera.annotate_background = Color.from_rgb_bytes(255, 251, 152)   
 								self.ButonResethandler("Capture")
 							
 							finally:
