@@ -16,26 +16,21 @@ Image_Path = Main_path + "Snapshots/"
 # --------------------------------- Capture Image Thread Class -------------------------------------------------
 # --------------------------------------------------------------------------------------------------------------   
 class QRPICaptureThread(QThread):
-	Snap_Captured_signal = pyqtSignal(str)
 	Send_Image_signal = pyqtSignal(str)
 	Status_Signal = pyqtSignal(int)
 	Capture_Terminated_signal = pyqtSignal(int)
 	Btn_Handler = pyqtSignal(str) 
 	Error_Signal = pyqtSignal(str) 
+	# ~ Snap_Captured_signal= pyqtSignal(str) 
 	
 	def __init__(self, RPICamera):
 		QThread.__init__(self)
 
 		self.camera = RPICamera
-		self.exitProgram = False
 		self.Snapshot_Ready = False
 		self.Stop_Rec = False
 		self.Record_Ready = False
 		self.VideoStream_Ready = False
-			
-	#Sets up the program to exit when the main window is shutting down
-	def Set_Exit_Program(self, exiter):
-			self.exitProgram = exiter
 
 	#Sets the program to initiate recording video
 	def Set_Record_Ready(self, Rec_Rdy):
@@ -44,7 +39,6 @@ class QRPICaptureThread(QThread):
 	#Sets up the program to initiate camera snapshot
 	def Set_Snapshot_Ready(self, Snap_Rdy):
 			self.Snapshot_Ready = Snap_Rdy
-		
 
 	#Sets the program to stop recording video  
 	def Set_Stop(self, stp_rdy):
@@ -63,9 +57,9 @@ class QRPICaptureThread(QThread):
 					self.Status_Signal.emit(0)
 			
 	#Function to reset video stream annotation text and background colors when stop button is pressed
-	def reset_Stream(self):
-			self.camera.annotate_foreground = Color('white')
-			self.camera.annotate_text = (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+	# ~ def reset_Stream(self):
+			# ~ self.camera.annotate_foreground = Color('white')
+			# ~ self.camera.annotate_text = (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 			#self.camera.annotate_background = Color.from_rgb_bytes(152, 251, 152)                
 		
 	def run(self):
@@ -76,28 +70,28 @@ class QRPICaptureThread(QThread):
 													 
 					try:								 
 						# PiCam Stream Text
-					#	self.camera.annotate_background = Color('blue')
-						self.camera.annotate_foreground = Color('white')
-						self.camera.annotate_text = ("Captured Image \n" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-						# Save image with timestamp
 						currentTime = time.strftime('%Y-%m-%d__%H_%M_%S')
+						# Save image with timestamp
 						Saved_Snap_Name = Image_Path + "Snapshot_" + currentTime + ".jpg"
+						
+						self.camera.annotate_foreground = Color('blue')
+						ts = datetime.datetime.now().strftime("%d %B %Y %I:%M:%S%p")
+						self.camera.annotate_text = ("Captured Image \n" + ts)
+			
 						self.camera.capture(Saved_Snap_Name, splitter_port = 0)
 
-						# emit image to GUI QLabel
+						# show image was taken
 						self.Display_Capture(Saved_Snap_Name)
 						
 						# emit saved file name
-						curr_path, filename = ntpath.split(Saved_Snap_Name)
-						self.SnapToGUI(filename)
+						# ~ curr_path, filename = ntpath.split(Saved_Snap_Name)
 						
-						if (self.Stop_Rec != False):
-										self.Procedure_Terminated("Procedure Stopped!")
-										self.reset_Stream()
+						# ~ if (self.Stop_Rec != False):
+										# ~ self.Procedure_Terminated("Procedure Stopped!")
+										# ~ self.reset_Stream()
 										
-										#Exit loop
-										self.Stop_Rec = False
+										# ~ #Exit loop
+										# ~ self.Stop_Rec = False
 													
 					except PiCameraValueError as e:
 						self.SendError("Something went wrong with the camera.. Try Again!")
@@ -125,12 +119,6 @@ class QRPICaptureThread(QThread):
 					#Exit loop
 					self.Stop_Rec = False
 
-
-					
-					
-	#Emits the string to console log GUI
-	def SnapToGUI(self,snap_str):
-			self.Snap_Captured_signal.emit(snap_str)   
 			
 	#Emits the image to GUI QLabel
 	def Display_Capture(self, pic_str):

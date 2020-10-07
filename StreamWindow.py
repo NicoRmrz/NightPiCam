@@ -21,20 +21,22 @@ class Stream_Video(QLabel):
         
         # Connecting thread (emits) to functions
         self.RPI_GUIStream.Video_Stream_signal.connect(self.StreamToGUI)
-        self.captureThread.Send_Image_signal.connect(self.ImagetoGUI)
-        self.recordThread.Rec_GUI_signal.connect(self.RecordtoGUI)
+        # ~ self.captureThread.Send_Image_signal.connect(self.ImagetoGUI)
+        # ~ self.recordThread.Rec_GUI_signal.connect(self.RecordtoGUI)
         
     def StreamToGUI(self, input_video):
         qimage = QImage(input_video, input_video.shape[1], input_video.shape[0], input_video.shape[1] * 3, QImage.Format_RGB888).rgbSwapped()
         pixmap = QPixmap.fromImage(qimage)
         #self.setPixmap(pixmap)
+        # ~ self.setPixmap(pixmap.scaled(800, 480, Qt.KeepAspectRatio))
         self.setPixmap(pixmap.scaled(800, 480, Qt.KeepAspectRatio))
-
-    def ImagetoGUI(self, input_pic):
-        pixmap = QPixmap(input_pic)
-        self.setPixmap(pixmap)
+        self.setAlignment(Qt.AlignBottom) 
         
-    def RecordtoGUI(self, input_rec):
-        pixmap = QPixmap(input_rec)
-        self.setPixmap(pixmap)  
+    # ~ def ImagetoGUI(self, input_pic):
+        # ~ pixmap = QPixmap(input_pic)
+        # ~ self.setPixmap(pixmap)
+        
+    # ~ def RecordtoGUI(self, input_rec):
+        # ~ pixmap = QPixmap(input_rec)
+        # ~ self.setPixmap(pixmap)  
              

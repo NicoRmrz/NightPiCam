@@ -20,12 +20,15 @@ class QRPIVideoStreamThread(QThread):
 	Video_Stream_signal = pyqtSignal(np.ndarray)
 	Error_Signal = pyqtSignal(str) 
     
-	def __init__(self, RPICamera, rawcap):
+	def __init__(self, RPICamera, rawcap, Capture_Thread):
 		QThread.__init__(self)
 		self.camera = RPICamera
 		self.raw = rawcap
 		self.VideoStream_Ready = False
-        
+		self.captureThread = Capture_Thread
+
+		self.captureThread .Send_Image_signal.connect(self.ImagetoGUI)
+
     #Sets up the program to initiate video stream
 	def Set_Video_Stream_Ready(self, stream_Rdy):
 		self.VideoStream_Ready = stream_Rdy
@@ -76,7 +79,12 @@ class QRPIVideoStreamThread(QThread):
 			
 			if (self.VideoStream_Ready != True):
 				break
-							
+				
+				
+	def ImagetoGUI(self, input_pic):
+			self.camera.annotate_foreground = Color('blue')
+			print(input_pic)
+        
 # ------------------------------------------------------------------		
 # ------------Emit Signals Functions -------------------------------
 # ------------------------------------------------------------------  

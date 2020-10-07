@@ -43,7 +43,7 @@ class Snapshot_Button(QPushButton):
         self.recordThread = record_thread
         
         #Connecting completions signals to functions
-        self.captureThread.Snap_Captured_signal.connect(self.Snapshot_Captured)    
+        self.captureThread.Send_Image_signal.connect(self.Snapshot_Captured)    
         self.TimerThread.time_signal.connect(self.Timer_Finished)   
         self.captureThread.Status_Signal.connect(self.Camera_Status)    
         self.captureThread.Capture_Terminated_signal.connect(self.Camera_Stopped)
@@ -70,7 +70,9 @@ class Snapshot_Button(QPushButton):
         self.Snap_captured = Snap_done
         
         #Display picture taken for 3 seCamera_Statusconds
-        self.TimerThread.set_Timer(1.5, True)
+        # ~ self.TimerThread.set_Timer(1.5, True)
+        
+        self.Reset_GUI() 
     
     #Function for completion of timer    
     def Timer_Finished(self, timeout):
