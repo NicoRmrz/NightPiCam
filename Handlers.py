@@ -54,12 +54,11 @@ class Button_Reset_Handler(QObject):
 # ------------------------------------ Error Handler Class -----------------------------------------------------
 # --------------------------------------------------------------------------------------------------------------
 class Error_Handler(QObject):
-        def __init__(self, captureThre, recordThre, videoStreamThre, statusBar):
+        def __init__(self, captureThre, recordThre, videoStreamThre):
                 super(Error_Handler, self).__init__()
                 self.captureThread = captureThre
                 self.recordThread = recordThre
                 self.videoStream = videoStreamThre
-                self.statusBar = statusBar
                 
                 # Connect signals to error function
                 self.recordThread.Error_Signal.connect(self.Show_Error)
@@ -69,8 +68,8 @@ class Error_Handler(QObject):
         # Function to write error message to console log
         def Show_Error(self, string):
                 self.errorMessage = string
-                self.statusBar.setStyleSheet(GUI_Style.statusBarRed)
-                self.statusBar.showMessage(self.errorMessage, 5000) 
+                print(string)
+     
                 
         # Function to continue streams after any errors
         def resetAllStreams(self, string):

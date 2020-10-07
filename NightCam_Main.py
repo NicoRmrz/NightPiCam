@@ -78,10 +78,10 @@ class Window(QMainWindow):
         # --------------------------------------------------------------
         # ---------------- Start All Threads ---------------------------
         # -------------------------------------------------------------- 
-        self.RPICaptureThread.start()
-        self.RPIRecordThread.start()
+       # self.RPICaptureThread.start()
+       # self.RPIRecordThread.start()
         self.Video_Stream.start()
-        self.Timer_Thread.start()
+       # self.Timer_Thread.start()
         self.accelerometerThread.start()
 
     
@@ -207,7 +207,7 @@ class Window(QMainWindow):
     def allHandlers(self):
         #self.buttonHandler = Button_Reset_Handler(self.RPICaptureThread, self.RPIRecordThread, self.snpsht_btn, self.rec_btn, self.Video_Stream, 
                                                          #self.statusBar)
-        self.errorHandler = Error_Handler(self.RPICaptureThread, self.RPIRecordThread, self.Video_Stream, self.statusBar)
+        self.errorHandler = Error_Handler(self.RPICaptureThread, self.RPIRecordThread, self.Video_Stream)
    
 
     # ------------------------------------------------------------------
@@ -215,13 +215,13 @@ class Window(QMainWindow):
     # ------------------------------------------------------------------             
     # Stop all threads when GUI is closed
     def closeEvent(self, *args, **kwargs):
-        self.RPICaptureThread.Set_Exit_Program(True)
+        self.RPICaptureThread.terminate
         self.RPICaptureThread.wait(100)
-        self.RPIRecordThread.Set_Exit_Program(True)
+        self.RPIRecordThread.terminate
         self.RPIRecordThread.wait(100)
-        self.Video_Stream.Set_Exit_Program(True)
+        self.Video_Stream.terminate
         self.Video_Stream.wait(100)
-        self.Timer_Thread.Set_Exit_Program(True)
+        self.Timer_Thread.terminate
         self.Timer_Thread.wait(100)
 
 # ----------------------------------------------------------------------

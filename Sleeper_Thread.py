@@ -32,20 +32,7 @@ class QTimeThread(QThread):
     def set_recTimer(self, input, State):
         self.time_sleep = input
         self.setSleep = State
-    
-    # Timer for time lapse button, wait for stream to pause     
-    def set_timeLapseTimer(self, input, State):
-        self.time_to_sleep = input
-        self.setSleepState = State
-    
-    # Timer for time lapse button, wait for stream to pause     
-    def set_dropDownTimer(self, input, State):
-        self.waitTime = input
-        self.sleepState = State
 
-    #Sets up the program to exit when the main window is shutting down
-    def Set_Exit_Program(self, exiter):
-        self.exitProgram = exiter
 
     #This function is started by .start() and runs the main portion of the code
     def run(self):

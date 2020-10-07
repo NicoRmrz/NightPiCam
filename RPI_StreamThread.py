@@ -25,16 +25,11 @@ class QRPIVideoStreamThread(QThread):
 		self.camera = RPICamera
 		self.raw = rawcap
 		self.VideoStream_Ready = False
-		self.exitProgram = False
         
     #Sets up the program to initiate video stream
 	def Set_Video_Stream_Ready(self, stream_Rdy):
 		self.VideoStream_Ready = stream_Rdy
-        
-    #Sets up the program to exit when the main window is shutting down
-	def Set_Exit_Program(self, exiter):
-		self.exitProgram = exiter,
-        
+       
 	def run(self):
 		self.setPriority(QThread.HighestPriority)
 
@@ -44,11 +39,6 @@ class QRPIVideoStreamThread(QThread):
 			if (self.VideoStream_Ready != False):
 				try:
 					# PiCam Stream configuration
-					self.camera.annotate_foreground = Color('black')
-					ts = datetime.datetime.now().strftime("%d %B %Y %I:%M:%S%p")
-					self.camera.annotate_text = (ts)
-					self.camera.annotate_background = Color.from_rgb_bytes(152, 251, 152) 
-				
 					#emit frame captured
 					self.StreamArray()
 				
@@ -58,12 +48,8 @@ class QRPIVideoStreamThread(QThread):
 				except PiCameraRuntimeError:
 					self.SendError("Stream Error.. Try Again!")	
 					self.VideoStream_Ready = True
-			
-			if(self.exitProgram == True):
-				self.exitProgram = False
-				break
-            
-			time.sleep(0.01)
+		
+			#time.sleep(0.01)
           
 
 # ------------------------------------------------------------------			
@@ -74,10 +60,10 @@ class QRPIVideoStreamThread(QThread):
 		for frame in (self.camera.capture_continuous(self.raw, format = 'bgr', splitter_port= 2)): 
 
 			# PiCam Stream configuration
-			self.camera.annotate_foreground = Color('black')
+			self.camera.annotate_foreground = Color('white')
 			ts = datetime.datetime.now().strftime("%d %B %Y %I:%M:%S%p")
 			self.camera.annotate_text = (ts)
-			self.camera.annotate_background = Color.from_rgb_bytes(152, 251, 152) 
+		#	self.camera.annotate_background = Color.from_rgb_bytes(152, 251, 152) 
 		
 			# grab the raw NumPy array representing the image
 			image = frame.array
@@ -91,7 +77,7 @@ class QRPIVideoStreamThread(QThread):
 			if (self.VideoStream_Ready != True):
 				break
 							
-# ------------------------------------------------------------------			
+# ------------------------------------------------------------------		
 # ------------Emit Signals Functions -------------------------------
 # ------------------------------------------------------------------  
     #Emits the estring to console log GUI

@@ -1,5 +1,5 @@
 from picamera import PiCamera, Color
-from picamera.exc import PiCameraValueError
+from picamera.exc import PiCameraValueError, PiCameraMMALError
 import time
 from time import sleep
 import datetime
@@ -32,7 +32,6 @@ class QRPICaptureThread(QThread):
 		self.Stop_Rec = False
 		self.Record_Ready = False
 		self.VideoStream_Ready = False
-		self.TimeLapse_Ready = False
 			
 	#Sets up the program to exit when the main window is shutting down
 	def Set_Exit_Program(self, exiter):
@@ -45,10 +44,7 @@ class QRPICaptureThread(QThread):
 	#Sets up the program to initiate camera snapshot
 	def Set_Snapshot_Ready(self, Snap_Rdy):
 			self.Snapshot_Ready = Snap_Rdy
-			
-	#Sets the program to initiate time lapse
-	def Set_TimeLapse_Ready(self, TLpapse_Rdy):
-			self.TimeLapse_Ready = TLpapse_Rdy
+		
 
 	#Sets the program to stop recording video  
 	def Set_Stop(self, stp_rdy):
@@ -68,68 +64,69 @@ class QRPICaptureThread(QThread):
 			
 	#Function to reset video stream annotation text and background colors when stop button is pressed
 	def reset_Stream(self):
-			self.camera.annotate_foreground = Color('black')
-			self.camera.annotate_text = ("Nico's RPI Cam\n" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-			self.camera.annotate_background = Color.from_rgb_bytes(152, 251, 152)                
+			self.camera.annotate_foreground = Color('white')
+			self.camera.annotate_text = (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+			#self.camera.annotate_background = Color.from_rgb_bytes(152, 251, 152)                
 		
 	def run(self):
 			self.setPriority(QThread.HighestPriority)
 
-			while (1):
-				
-					#Set capture snapshot
-					if (self.Snapshot_Ready != False and self.Record_Ready != True and self.Stop_Rec != True and self.TimeLapse_Ready != True):
-															 
-							try:								 
-								# PiCam Stream Text
-								self.camera.annotate_background = Color('blue')
-								self.camera.annotate_foreground = Color('white')
-								self.camera.annotate_text = ("Captured Image \n" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+			#Set capture snapshot
+			if (self.Snapshot_Ready != False and self.Record_Ready != True and self.Stop_Rec != True):
+													 
+					try:								 
+						# PiCam Stream Text
+					#	self.camera.annotate_background = Color('blue')
+						self.camera.annotate_foreground = Color('white')
+						self.camera.annotate_text = ("Captured Image \n" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-								# Save image with timestamp
-								currentTime = time.strftime('%Y-%m-%d__%H_%M_%S')
-								Saved_Snap_Name = Image_Path + "Snapshot_" + currentTime + ".jpg"
-								self.camera.capture(Saved_Snap_Name, splitter_port = 0)
+						# Save image with timestamp
+						currentTime = time.strftime('%Y-%m-%d__%H_%M_%S')
+						Saved_Snap_Name = Image_Path + "Snapshot_" + currentTime + ".jpg"
+						self.camera.capture(Saved_Snap_Name, splitter_port = 0)
 
-								# emit image to GUI QLabel
-								self.Display_Capture(Saved_Snap_Name)
-								
-								# emit saved file name
-								curr_path, filename = ntpath.split(Saved_Snap_Name)
-								self.SnapToGUI(filename)
-								
-								if (self.Stop_Rec != False):
-												self.Procedure_Terminated("Procedure Stopped!")
-												self.reset_Stream()
-												
-												#Exit loop
-												self.Stop_Rec = False
-															
-							except PiCameraValueError as e:
-								self.SendError("Something went wrong with the camera.. Try Again!")
-								self.camera.annotate_text = (str(e))
-								self.camera.annotate_background = Color.from_rgb_bytes(255, 251, 152)   
-								self.ButonResethandler("Capture")
-							
-							finally:
-								#Exit loop
-								self.Snapshot_Ready = False
-				   
-					if (self.Stop_Rec != False):
-							self.reset_Stream()        
-							self.Procedure_Terminated("Procedure Stopped!")   
-							self.Record_Ready = False
-							self.TimeLapse_Ready = False
-							self.Snapshot_Ready = False
-							
-							#Exit loop
-							self.Stop_Rec = False
+						# emit image to GUI QLabel
+						self.Display_Capture(Saved_Snap_Name)
+						
+						# emit saved file name
+						curr_path, filename = ntpath.split(Saved_Snap_Name)
+						self.SnapToGUI(filename)
+						
+						if (self.Stop_Rec != False):
+										self.Procedure_Terminated("Procedure Stopped!")
+										self.reset_Stream()
+										
+										#Exit loop
+										self.Stop_Rec = False
+													
+					except PiCameraValueError as e:
+						self.SendError("Something went wrong with the camera.. Try Again!")
+						self.camera.annotate_text = (str(e))
+						self.camera.annotate_background = Color.from_rgb_bytes(255, 251, 152)   
+						self.ButonResethandler("Capture")
+													
+					except PiCameraMMALError as e:
+						self.SendError("Something went wrong with the camera.. Try Again!")
+						self.camera.annotate_text = (str(e))
+						self.camera.annotate_background = Color.from_rgb_bytes(255, 251, 152)   
+						self.ButonResethandler("Capture")
+					
+					finally:
+						#Exit loop
+						self.Snapshot_Ready = False
+		   
+			if (self.Stop_Rec != False):
+					self.reset_Stream()        
+					self.Procedure_Terminated("Procedure Stopped!")   
+					self.Record_Ready = False
+					self.TimeLapse_Ready = False
+					self.Snapshot_Ready = False
+					
+					#Exit loop
+					self.Stop_Rec = False
 
-					if(self.exitProgram == True):
-							self.exitProgram = False
-							break
 
-					sleep(1)
+					
 					
 	#Emits the string to console log GUI
 	def SnapToGUI(self,snap_str):

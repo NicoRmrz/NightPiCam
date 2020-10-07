@@ -63,6 +63,7 @@ class Snapshot_Button(QPushButton):
         self.captureThread.Set_Snapshot_Ready(True)
         self.captureThread.Set_Stop(False)      # set stop button to false
         self.recordThread.Set_Snapshot_Ready(True)  #let other  thread know capture button was pressed
+        self.captureThread.start()
         
     #Function for picture capture completion
     def Snapshot_Captured(self, Snap_done):
